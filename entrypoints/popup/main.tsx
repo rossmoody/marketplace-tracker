@@ -1,8 +1,18 @@
+import { StorageUtilities } from "@/src/storage-utilities";
+import { saveAs } from "file-saver";
+
 export const Main = () => {
+  const handleExport = async () => {
+    const data = await StorageUtilities.getStorageData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    saveAs(blob, "marketplace-tracker-data.json");
+  };
+
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <button className="w-40">Export Data</button>
-    </>
+    <main className="p-12">
+      <button onClick={handleExport}>Export Data</button>
+    </main>
   );
 };
