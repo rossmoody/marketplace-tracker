@@ -1,3 +1,5 @@
+import { StorageUtilities } from "@/src/storage-utilities";
+
 type Message = {
   type: "load-item";
   data: {
@@ -24,7 +26,7 @@ export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message: Message) => {
     switch (message.type) {
       case "load-item":
-        handleItemLoad(message.data);
+        StorageUtilities.setStorageData(message.data);
         break;
 
       default:
@@ -32,7 +34,3 @@ export default defineBackground(() => {
     }
   });
 });
-
-function handleItemLoad(itemData: Message["data"]) {
-  console.log(`Item ${itemData} loaded from tab`);
-}
