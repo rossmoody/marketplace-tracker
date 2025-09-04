@@ -17,6 +17,10 @@ export type Message = {
      * The timestamp when the item was loaded
      */
     timestamp: number;
+    /**
+     * The inner text of the marketplace item page
+     */
+    innerText: string;
   };
 };
 
@@ -34,19 +38,21 @@ export default defineContentScript({
       );
 
       if (isItemPage) {
-        const itemId = window.location.pathname.match(
-          /\/marketplace\/item\/(\d+)/
-        )?.[1];
-
         try {
+          const data: Message["data"] = {
+            itemId:
+              window.location.pathname.match(
+                /\/marketplace\/item\/(\d+)/
+              )?.[1] ?? "",
+            url: window.location.href,
+            title: document.title.replace("Marketplace - ", ""),
+            timestamp: Date.now(),
+            innerText: document.body.innerText,
+          };
+
           browser.runtime.sendMessage({
             type: "load-item",
-            data: {
-              itemId,
-              url: window.location.href,
-              title: document.title,
-              timestamp: Date.now(),
-            },
+            data,
           });
         } catch (error) {
           console.error("Failed to send message:", error);
@@ -63,7 +69,7 @@ export default defineContentScript({
     const observer = new MutationObserver(() => {
       if (currentUrl !== window.location.href) {
         currentUrl = window.location.href;
-        loadMarketplaceItem();
+        setTimeout(loadMarketplaceItem, 2000);
       }
     });
 
