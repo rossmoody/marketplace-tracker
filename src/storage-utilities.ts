@@ -1,4 +1,7 @@
+import { Data } from "@/entrypoints/content";
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+
+const MP_STORAGE_KEY = "marketplace-tracker";
 
 /**
  * A helper for working with Chrome storage and automating compression.
@@ -21,22 +24,19 @@ export const StorageUtilities = {
   /**
    * Get various types of collection data from storage. Automatically decompresses data.
    */
-  async getStorageData<T>(key = "marketplace-tracker"): Promise<T | undefined> {
+  async getStorageData(key = MP_STORAGE_KEY): Promise<Data> {
     try {
       const data = await browser.storage.local.get(key);
       return this.decompressFromBase64(data[key]);
     } catch {
-      return;
+      return [];
     }
   },
 
   /**
    * Sets data in storage based on key. Automatically compresses data.
    */
-  async setStorageData(
-    data: unknown,
-    key = "marketplace-tracker"
-  ): Promise<void> {
+  async setStorageData(data: unknown, key = MP_STORAGE_KEY): Promise<void> {
     await browser.storage.local.set({
       [key]: this.compressToBase64(data),
     });

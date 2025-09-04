@@ -1,3 +1,27 @@
+export type Message = {
+  type: "load-item";
+  data: {
+    /**
+     * The ID of the marketplace item
+     */
+    itemId: string;
+    /**
+     * The URL of the marketplace item
+     */
+    url: string;
+    /**
+     * The title of the marketplace item
+     */
+    title: string;
+    /**
+     * The timestamp when the item was loaded
+     */
+    timestamp: number;
+  };
+};
+
+export type Data = Array<Message["data"]>;
+
 export default defineContentScript({
   matches: ["*://*.facebook.com/marketplace/*"],
   main() {
