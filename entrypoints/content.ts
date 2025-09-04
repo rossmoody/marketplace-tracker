@@ -1,6 +1,6 @@
 export default defineContentScript({
-  matches: ['*://*.google.com/*'],
+  matches: ["*://*.facebook.com/marketplace/*"],
   main() {
-    console.log('Hello content.');
+    console.log("Hello content.");
   },
 });
